@@ -41,6 +41,7 @@ func _on_msg_received(conn_id: int, bytes: PackedByteArray):
 					nicknames[conn_id] = argv[0]
 					return
 				\"/fucktheclubup\":
+					return
 					send_data[\"type\"] = \"fucktheclubup\"
 					send_data[\"audio_id\"] = randi_range(0, 13)
 					server.send(var_to_bytes(send_data), true)

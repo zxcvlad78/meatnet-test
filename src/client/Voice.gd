@@ -28,6 +28,7 @@ func setup_microphone() -> AudioEffectCapture:
 	var effect: AudioEffectCapture = AudioServer.get_bus_effect(bus_idx, 0) as AudioEffectCapture
 	if effect == null:
 		push_error("VoiceInput has no Capture effect")
+	
 	return effect
 
 # ---------- Кодирование в μ‑law (8 бит) вместо 16‑бит PCM ----------
@@ -90,5 +91,6 @@ func update(client: MeatNetClient, delta: float) -> void:
 				"sample_rate": target_sample_rate,
 				"channels": 1
 			}
+			
 			client.send(var_to_bytes(packet), false)
 		_send_timer = 0.0
