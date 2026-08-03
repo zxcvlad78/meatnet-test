@@ -1,96 +1,116 @@
 class_name MeatNetVoice extends Node
 
 var is_active: bool = false
-var _capture_effect: AudioEffectCapture
+
+# Параметры
+var target_sample_rate: int = 8000          # целевая частота после сжатия
+var update_interval: float = 0.1            # отправляем пакет каждые 0.1 сек
+var vad_threshold: float = 0.01             # порог VAD
+
+# Внутренние
+var _mix_rate: int                          # частота микса (обычно 48000)
+var _input_buffer: PackedVector2Array = []  # накопленные сэмплы с микрофона
+var _accumulated_time: float = 0.0          # сколько времени накоплено
+
+# Для активации микрофона (иногда нужно на Windows)
 var _mic_player: AudioStreamPlayer
 
-var _send_timer: float = 0.0
-var _update_interval: float = 0.1          # интервал отправки (было 0.05)
-var target_sample_rate: int = 8000          # новая частота дискретизации
-var decimation_factor: int = 6              # 48000 / 8000 = 6 (если микрофон 48 кГц)
-var vad_threshold: float = 0.01             # порог активности речи (VAD)
-
 func _ready() -> void:
-	_capture_effect = setup_microphone()
-
-func setup_microphone() -> AudioEffectCapture:
-	var bus_idx = AudioServer.get_bus_index("VoiceInput")
-	if bus_idx == -1:
-		push_error("VoiceInput bus not found")
-		return null
+	_mix_rate = AudioServer.get_mix_rate()
+	print("Mix rate: ", _mix_rate)
 	
+	# Включаем захват аудио
+	#AudioServer.set_enable_input(true)
+	
+	# Для надёжности создаём плеер с микрофоном, чтобы активировать устройство
 	_mic_player = AudioStreamPlayer.new()
 	_mic_player.stream = AudioStreamMicrophone.new()
-	_mic_player.bus = "VoiceInput"
+	_mic_player.bus = "VoiceInput"   # можно любой, лишь бы был
 	add_child(_mic_player)
 	_mic_player.play()
 	
-	var effect: AudioEffectCapture = AudioServer.get_bus_effect(bus_idx, 0) as AudioEffectCapture
-	if effect == null:
-		push_error("VoiceInput has no Capture effect")
-	
-	return effect
 
-# ---------- Кодирование в μ‑law (8 бит) вместо 16‑бит PCM ----------
+# ---------- Кодирование μ‑law ----------
 static func linear_to_mulaw(sample: int) -> int:
 	const MAX = 32767
-	const MULAW_BIAS = 33
+	const BIAS = 33
 	var sign = 0 if sample >= 0 else 1
 	sample = abs(sample)
 	if sample >= MAX:
 		sample = MAX
+	sample += BIAS
 	var exponent = 0
 	var temp = sample >> 8
 	while temp != 0:
 		exponent += 1
 		temp >>= 1
 	var mantissa = (sample >> (exponent + 3)) & 0xF
-	var mulaw = (~(sign << 7 | exponent << 4 | mantissa)) & 0xFF
+	var mulaw = ~(sign << 7 | exponent << 4 | mantissa) & 0xFF
 	return mulaw
 
-static func buffer_to_mono_bytes(buffer: PackedVector2Array) -> PackedByteArray:
+static func buffer_to_mulaw_bytes(buffer: PackedVector2Array) -> PackedByteArray:
 	var data = PackedByteArray()
-	data.resize(buffer.size())          # 1 байт на сэмпл вместо 2
+	data.resize(buffer.size())
 	for i in buffer.size():
 		var mono = (buffer[i].x + buffer[i].y) * 0.5
 		var sample = clamp(int(mono * 32767.0), -32768, 32767)
 		data[i] = linear_to_mulaw(sample)
 	return data
 
-# ---------- Обновление и отправка ----------
+# ---------- Обновление (вызывать из _process) ----------
 func update(client: MeatNetClient, delta: float) -> void:
-	if _capture_effect == null:
+	# 1. Читаем новые сэмплы с микрофона (сколько доступно)
+	var available = AudioServer.get_input_frames_available()
+	if available > 0:
+		var new_frames = AudioServer.get_input_frames(available)
+		_input_buffer.append_array(new_frames)
+	
+	# 2. Накопили достаточно времени для отправки?
+	_accumulated_time += delta
+	if _accumulated_time < update_interval:
 		return
 	
-	_send_timer += delta
-	if _send_timer >= _update_interval:
-		var frames = _capture_effect.get_frames_available()
-		if frames > 0:
-			var buffer = _capture_effect.get_buffer(frames)
-			_capture_effect.clear_buffer()
-			
-			# --- VAD: проверка активности речи ---
-			var rms = 0.0
-			for v in buffer:
-				rms += v.x * v.x + v.y * v.y
-			rms = sqrt(rms / buffer.size())
-			if rms < vad_threshold:
-				_send_timer = 0.0
-				return
-			
-			# --- Прореживание (даунсэмплинг) до target_sample_rate ---
-			var decimated = PackedVector2Array()
-			decimated.resize(frames / decimation_factor)
-			for i in decimated.size():
-				decimated[i] = buffer[i * decimation_factor]
-			
-			var audio_bytes = buffer_to_mono_bytes(decimated)
-			var packet = {
-				"type": "voice",
-				"bytes": audio_bytes,
-				"sample_rate": target_sample_rate,
-				"channels": 1
-			}
-			
-			client.send(var_to_bytes(packet), false)
-		_send_timer = 0.0
+	# 3. У нас есть данные для отправки
+	var total_frames = _input_buffer.size()
+	if total_frames == 0:
+		_accumulated_time = 0.0
+		return
+	
+	# 4. Применяем VAD (проверяем RMS по всему буферу)
+	var rms = 0.0
+	for v in _input_buffer:
+		rms += v.x * v.x + v.y * v.y
+	rms = sqrt(rms / total_frames)
+	if rms < vad_threshold:
+		# Тишина — ничего не отправляем, но буфер очищаем
+		_input_buffer.clear()
+		_accumulated_time = 0.0
+		return
+	
+	# 5. Децимация до target_sample_rate с усреднением
+	var decimation_factor = roundi(_mix_rate / float(target_sample_rate))
+	if decimation_factor < 1:
+		decimation_factor = 1
+	var decimated = PackedVector2Array()
+	decimated.resize(total_frames / decimation_factor)
+	for i in decimated.size():
+		var sum = Vector2()
+		for j in range(decimation_factor):
+			sum += _input_buffer[i * decimation_factor + j]
+		decimated[i] = sum / decimation_factor
+	
+	# 6. Кодируем в μ‑law
+	var audio_bytes = buffer_to_mulaw_bytes(decimated)
+	
+	# 7. Отправляем пакет
+	var packet = {
+		"type": "voice",
+		"bytes": audio_bytes,
+		"sample_rate": target_sample_rate,
+		"channels": 1
+	}
+	client.send(var_to_bytes(packet), false)
+	
+	# 8. Очищаем буфер и сбрасываем таймер
+	_input_buffer.clear()
+	_accumulated_time = 0.0

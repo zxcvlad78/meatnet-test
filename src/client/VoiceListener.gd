@@ -25,6 +25,7 @@ static func mulaw_to_linear(mulaw: int) -> float:
 	var exponent = (biased & 0x70) >> 4
 	var mantissa = biased & 0x0F
 	var sample = ((mantissa << 3) + 0x84) << exponent
+	sample -= 0x84   # вычитаем смещение (BIAS)
 	if sign:
 		sample = -sample
 	return sample / 32767.0
