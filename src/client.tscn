@@ -17,12 +17,12 @@
 [ext_resource type="Script" uid="uid://e4cefdi6enwq" path="res://src/client/VoiceListener.gd" id="15_4r1j3"]
 
 [sub_resource type="GDScript" id="GDScript_2k4rt"]
-script/source = "extends Node
+script/source = "#client
+extends Node
 
 var client: MeatNetClient = null
 @onready var label: Label = $Control/Label
 @onready var label_2: Label = $Control/Label2
-
 
 @onready var line_edit: LineEdit = $Control/VBoxContainer/LineEdit
 @onready var button_connect: Button = $Control/VBoxContainer/ButtonConnect
@@ -31,18 +31,14 @@ var client: MeatNetClient = null
 @onready var button_send_message: Button = $Control/VBoxContainer/ButtonSendMessage
 
 @onready var fucktheclubup: AudioStreamPlayer = $fucktheclubup
-
-@export var audio_list:Array[AudioStream]
+@export var audio_list: Array[AudioStream]
 
 @onready var meat_net_voice: MeatNetVoice = $MeatNetVoice
 @onready var meat_net_voice_listener: MeatNetVoiceListener = $MeatNetVoiceListener
 
-
 func _ready() -> void:
 	client = MeatNetClient.new()
 	client.message_received.connect(_on_msg_received)
-	
-	
 	
 	button_connect.pressed.connect(
 		func(): print(\"connect error: \", client.connect(line_edit.text))
@@ -62,7 +58,6 @@ func _ready() -> void:
 				client.send(bytes, true)
 	)
 
-
 func _on_msg_received(data: PackedByteArray):
 	var received_data: Dictionary = bytes_to_var(data)
 	var received_packed_type: String = received_data[\"type\"]
@@ -71,7 +66,7 @@ func _on_msg_received(data: PackedByteArray):
 		label_2.text += received_data[\"text\"] + \"\\n\"
 	
 	elif received_packed_type == \"voice\":
-		print(\"Received voice packet, size: \", received_data[\"bytes\"].size())
+		# Обработка голосового пакета (уже оптимизирована в MeatNetVoiceListener)
 		meat_net_voice_listener.msg_process(received_data)
 	
 	elif received_packed_type == \"fucktheclubup\":
@@ -80,7 +75,6 @@ func _on_msg_received(data: PackedByteArray):
 		var audio_id: int = received_data[\"audio_id\"]
 		if audio_id > audio_list.size():
 			return
-		
 		fucktheclubup.stream = audio_list[audio_id]
 		fucktheclubup.play()
 		label_2.text += \"fucktheclubup xD\\n\"
@@ -95,7 +89,7 @@ func _process(delta: float) -> void:
 	\"\"\" % [
 		client.is_active(),
 		client.get_connection_id()
-		]
+	]
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j11hd"]
