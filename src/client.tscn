@@ -13,6 +13,8 @@
 [ext_resource type="AudioStream" uid="uid://bukgxfkv64wnb" path="res://src/client/verity-edit.mp3" id="11_xfnw7"]
 [ext_resource type="AudioStream" uid="uid://bssp5mv56ev5j" path="res://src/client/vizg-svini.mp3" id="12_2xqgu"]
 [ext_resource type="AudioStream" uid="uid://bhhn0j1dhoosa" path="res://src/client/zvuk-litvina.mp3" id="13_qqqx1"]
+[ext_resource type="Script" uid="uid://cafj0dvsggmrd" path="res://src/client/Voice.gd" id="14_1r7gt"]
+[ext_resource type="Script" uid="uid://e4cefdi6enwq" path="res://src/client/VoiceListener.gd" id="15_4r1j3"]
 
 [sub_resource type="GDScript" id="GDScript_2k4rt"]
 script/source = "extends Node
@@ -32,9 +34,15 @@ var client: MeatNetClient = null
 
 @export var audio_list:Array[AudioStream]
 
+@onready var meat_net_voice: MeatNetVoice = $MeatNetVoice
+@onready var meat_net_voice_listener: MeatNetVoiceListener = $MeatNetVoiceListener
+
+
 func _ready() -> void:
 	client = MeatNetClient.new()
 	client.message_received.connect(_on_msg_received)
+	
+	
 	
 	button_connect.pressed.connect(
 		func(): print(\"connect error: \", client.connect(line_edit.text))
@@ -54,12 +62,17 @@ func _ready() -> void:
 				client.send(bytes, true)
 	)
 
+
 func _on_msg_received(data: PackedByteArray):
 	var received_data: Dictionary = bytes_to_var(data)
 	var received_packed_type: String = received_data[\"type\"]
 	
 	if received_packed_type == \"chat_message\":
 		label_2.text += received_data[\"text\"] + \"\\n\"
+	
+	elif received_packed_type == \"voice\":
+		print(\"Received voice packet, size: \", received_data[\"bytes\"].size())
+		meat_net_voice_listener.msg_process(received_data)
 	
 	elif received_packed_type == \"fucktheclubup\":
 		if audio_list.is_empty():
@@ -72,7 +85,8 @@ func _on_msg_received(data: PackedByteArray):
 		fucktheclubup.play()
 		label_2.text += \"fucktheclubup xD\\n\"
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	meat_net_voice.update(client, delta)
 	client.update()
 	
 	label.text = \"\"\" Client\\n
@@ -152,3 +166,11 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_j11hd")
 metadata/_edit_use_anchors_ = true
 
 [node name="fucktheclubup" type="AudioStreamPlayer" parent="." unique_id=1027724610]
+
+[node name="MeatNetVoice" type="Node" parent="." unique_id=1519947346]
+script = ExtResource("14_1r7gt")
+metadata/_custom_type_script = "uid://cafj0dvsggmrd"
+
+[node name="MeatNetVoiceListener" type="Node" parent="." unique_id=1423608419]
+script = ExtResource("15_4r1j3")
+metadata/_custom_type_script = "uid://e4cefdi6enwq"

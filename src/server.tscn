@@ -60,8 +60,9 @@ func _on_msg_received(conn_id: int, bytes: PackedByteArray):
 		
 		server.send(var_to_bytes(send_data), true)
 	
-	elif received_packet_type == \"\":
-		pass
+	elif received_packet_type == \"voice\":
+		
+		server.broadcast(bytes, conn_id, true)
 
 func get_nickname(id: int) -> String:
 	if nicknames.has(id):
