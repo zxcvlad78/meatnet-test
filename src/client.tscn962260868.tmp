@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bqh6oi0b30s30"]
+
+[sub_resource type="GDScript" id="GDScript_2k4rt"]
+script/source = "extends Node
+
+var client = null
+@onready var label: Label = $Label
+
+@onready var line_edit: LineEdit = $VBoxContainer/LineEdit
+@onready var button_connect: Button = $VBoxContainer/ButtonConnect
+@onready var button_disconnect: Button = $VBoxContainer/ButtonDisconnect
+
+func _ready() -> void:
+	client = MeatNetClient.new()
+	
+	button_connect.pressed.connect(
+		func(): print(\"connect error: \", client.connect(line_edit.text))
+	)
+	button_disconnect.pressed.connect(
+		func(): client.close()
+	)
+
+
+func _process(_delta: float) -> void:
+	client.update()
+	
+	label.text = \"\"\" Client\\n
+	is_active: %s\\n
+	connection_id: %s\\n
+	\"\"\" % [
+		client.is_active(),
+		client.get_connection_id()
+		]
+"
+
+[node name="Client" type="Node" unique_id=1367465544]
+script = SubResource("GDScript_2k4rt")
+
+[node name="Label" type="Label" parent="." unique_id=646700381]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1355962155]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 256.0
+offset_top = 256.0
+offset_right = -256.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer" unique_id=2096975225]
+layout_mode = 2
+text = "127.0.0.1:8080"
+placeholder_text = "server address"
+alignment = 1
+
+[node name="ButtonConnect" type="Button" parent="VBoxContainer" unique_id=1430075051]
+layout_mode = 2
+text = "connect"
+
+[node name="ButtonDisconnect" type="Button" parent="VBoxContainer" unique_id=755352285]
+layout_mode = 2
+text = "disconnect"

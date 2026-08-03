@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://cj6mvqxgq0m62"]
+
+[sub_resource type="GDScript" id="GDScript_g4v7s"]
+script/source = "extends Node
+
+var server: MeatNetServer = null
+@onready var label: Label = $Label
+
+var tacc: float = 0.0
+var time_max: float = 0.5
+var c: int = 0
+var c_max: int = 4
+
+var nicknames: Dictionary = {  }
+
+func _ready() -> void:
+	randomize()
+	server = MeatNetServer.new()
+	server.message_received.connect(_on_msg_received)
+	server.start(27020)
+
+func _on_msg_received(conn_id: int, bytes: PackedByteArray):
+	var data: Dictionary = bytes_to_var(bytes)
+	
+	var received_packet_type:String = data[\"type\"]
+	
+	var send_data: Dictionary = { }
+	
+	if received_packet_type == \"chat_message\":
+		var received_msg: String = data[\"text\"]
+		if received_msg[0] == \"/\":
+			var parsed: PackedStringArray = received_msg.split(\" \")
+			if parsed.is_empty():
+				return
+				
+			var cmd = parsed[0]
+			var argv: PackedStringArray = parsed
+			argv.remove_at(0)
+			var argc: int = argv.size()
+			
+			match cmd:
+				\"/nick\":
+					if argc == 0:
+						return
+					
+					nicknames[conn_id] = argv[0]
+					return
+				\"/fucktheclubup\":
+					send_data[\"type\"] = \"fucktheclubup\"
+					send_data[\"audio_id\"] = randi_range(0, 13)
+					
+					server.send(var_to_bytes(send_data), true)
+					return
+			
+			return
+		
+		var full_msg: String = get_nickname(conn_id) + \": \" + received_msg
+		send_data[\"type\"] = \"chat_message\"
+		send_data[\"text\"] = full_msg
+		
+		server.send(var_to_bytes(send_data), true)
+	
+	elif received_packet_type == \"\":
+		pass
+
+func get_nickname(id: int) -> String:
+	if nicknames.has(id):
+		return nicknames[id]
+	return str(id)
+
+func _process(delta: float) -> void:
+	if !server:
+		return
+	
+	server.update()
+	
+	tacc += delta
+	
+	if tacc >= time_max:
+		tacc = 0.0
+		c += 1
+		
+		if c >= c_max:
+			c = 0
+	
+	var c_str: String = \"\"
+	for i in c:
+		c_str += \".\"
+	
+	label.text = \"\"\"Server%s\\n
+		is_active: %s\\n
+		clients: %s\\n
+		\"\"\" % [
+			c_str,
+			server.is_active(),
+			server.get_connected_clients(),
+			]
+			
+"
+
+[node name="Server" type="Node" unique_id=1464944000]
+script = SubResource("GDScript_g4v7s")
+
+[node name="Label" type="Label" parent="." unique_id=111226064]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "server"
