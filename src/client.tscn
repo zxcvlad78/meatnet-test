@@ -1,34 +1,43 @@
 [gd_scene format=3 uid="uid://bqh6oi0b30s30"]
 
-[ext_resource type="AudioStream" uid="uid://gf2srsc1xob1" path="res://src/client/bankomat-melstroi_uUdPD2C.mp3" id="1_d1ewr"]
-[ext_resource type="AudioStream" uid="uid://c8lbjpplrarro" path="res://src/client/busik-ttsk.mp3" id="2_on60l"]
-[ext_resource type="AudioStream" uid="uid://dvg448yaejqy6" path="res://src/client/discipline_eqjphn0.mp3" id="3_1r7gt"]
-[ext_resource type="AudioStream" uid="uid://c21miafusbc4o" path="res://src/client/du-bist-gut-genug.mp3" id="4_4r1j3"]
-[ext_resource type="AudioStream" uid="uid://cepq44qqela0" path="res://src/client/gudok-poezda.mp3" id="5_k1uec"]
-[ext_resource type="AudioStream" uid="uid://c7oynk1gxe7dp" path="res://src/client/okhaeshechki-dattebaeshechki.mp3" id="6_uknch"]
-[ext_resource type="AudioStream" uid="uid://bq0qviokyfgs4" path="res://src/client/ot-chekushki-stanet-vsem-teplei-full.mp3" id="7_c40q3"]
-[ext_resource type="AudioStream" uid="uid://cyg5ky3jgsbbe" path="res://src/client/sela-dala.mp3" id="8_abs7h"]
-[ext_resource type="AudioStream" uid="uid://diwf1k387r85" path="res://src/client/shturval-udovolstviia-ful.mp3" id="9_wi5wv"]
-[ext_resource type="AudioStream" uid="uid://bxuu21rxl12pf" path="res://src/client/tiki-tiki-boosted.mp3" id="10_i7ck6"]
-[ext_resource type="AudioStream" uid="uid://bukgxfkv64wnb" path="res://src/client/verity-edit.mp3" id="11_xfnw7"]
-[ext_resource type="AudioStream" uid="uid://bssp5mv56ev5j" path="res://src/client/vizg-svini.mp3" id="12_2xqgu"]
-[ext_resource type="AudioStream" uid="uid://bhhn0j1dhoosa" path="res://src/client/zvuk-litvina.mp3" id="13_qqqx1"]
+[ext_resource type="AudioStream" uid="uid://gf2srsc1xob1" path="res://src/client/audio/bankomat-melstroi_uUdPD2C.mp3" id="1_i7ck6"]
+[ext_resource type="AudioStream" uid="uid://c8lbjpplrarro" path="res://src/client/audio/busik-ttsk.mp3" id="2_xfnw7"]
+[ext_resource type="AudioStream" uid="uid://dvg448yaejqy6" path="res://src/client/audio/discipline_eqjphn0.mp3" id="3_2xqgu"]
+[ext_resource type="AudioStream" uid="uid://c21miafusbc4o" path="res://src/client/audio/du-bist-gut-genug.mp3" id="4_qqqx1"]
+[ext_resource type="AudioStream" uid="uid://cepq44qqela0" path="res://src/client/audio/gudok-poezda.mp3" id="5_pe24h"]
+[ext_resource type="AudioStream" uid="uid://c7oynk1gxe7dp" path="res://src/client/audio/okhaeshechki-dattebaeshechki.mp3" id="6_n1usf"]
+[ext_resource type="AudioStream" uid="uid://bq0qviokyfgs4" path="res://src/client/audio/ot-chekushki-stanet-vsem-teplei-full.mp3" id="7_dlucc"]
+[ext_resource type="AudioStream" uid="uid://cyg5ky3jgsbbe" path="res://src/client/audio/sela-dala.mp3" id="8_vgroh"]
+[ext_resource type="AudioStream" uid="uid://diwf1k387r85" path="res://src/client/audio/shturval-udovolstviia-ful.mp3" id="9_up72t"]
+[ext_resource type="AudioStream" uid="uid://bxuu21rxl12pf" path="res://src/client/audio/tiki-tiki-boosted.mp3" id="10_s3cw1"]
+[ext_resource type="AudioStream" uid="uid://bukgxfkv64wnb" path="res://src/client/audio/verity-edit.mp3" id="11_7g15q"]
+[ext_resource type="AudioStream" uid="uid://bssp5mv56ev5j" path="res://src/client/audio/vizg-svini.mp3" id="12_ogj38"]
+[ext_resource type="AudioStream" uid="uid://bhhn0j1dhoosa" path="res://src/client/audio/zvuk-litvina.mp3" id="13_spk21"]
 [ext_resource type="Script" uid="uid://cafj0dvsggmrd" path="res://src/client/Voice.gd" id="14_1r7gt"]
+[ext_resource type="Texture2D" uid="uid://dy0hqsvfb8ge6" path="res://src/client/textures/gear.png" id="14_4r1j3"]
+[ext_resource type="Texture2D" uid="uid://cxx1c80cu6v81" path="res://src/client/textures/btn98x128.png" id="14_k1uec"]
+[ext_resource type="Texture2D" uid="uid://1t2anhhwndvx" path="res://src/client/textures/bg.png" id="14_uknch"]
 [ext_resource type="Script" uid="uid://e4cefdi6enwq" path="res://src/client/VoiceListener.gd" id="15_4r1j3"]
+[ext_resource type="Texture2D" uid="uid://cykysbo5ruukt" path="res://src/client/textures/btn256x98-pressed.png" id="16_c40q3"]
+[ext_resource type="Texture2D" uid="uid://bh648l6hiylj1" path="res://src/client/textures/split.png" id="17_abs7h"]
+[ext_resource type="Script" uid="uid://bpempaoqep85j" path="res://test/key_binding.gd" id="19_wi5wv"]
+[ext_resource type="AudioStream" uid="uid://cn667q4at5wrx" path="res://src/client/audio/Rory in early 20s - 99999999999.mp3" id="22_i7ck6"]
 
 [sub_resource type="GDScript" id="GDScript_2k4rt"]
 script/source = "#client
 extends Node
 
 var client: MeatNetClient = null
-@onready var label: Label = $Control/Label
-@onready var label_2: Label = $Control/Label2
 
 @onready var line_edit: LineEdit = $Control/VBoxContainer/LineEdit
-@onready var button_connect: Button = $Control/VBoxContainer/ButtonConnect
-@onready var button_disconnect: Button = $Control/VBoxContainer/ButtonDisconnect
-@onready var msg_line_edit: LineEdit = $Control/VBoxContainer/MsgLineEdit
-@onready var button_send_message: Button = $Control/VBoxContainer/ButtonSendMessage
+@onready var button_connect: TextureButton = $Control/VBoxContainer/ButtonConnect
+@onready var button_disconnect: TextureButton = $Control/VBoxContainer/ButtonDisconnect
+
+@onready var msg_line_edit: LineEdit = $Control/MsgLineEdit
+
+@onready var global_chat_label: Label = $Control/GlobalChat/Label
+
+@onready var rooms: ScrollContainer = $Control/Rooms
 
 @onready var fucktheclubup: AudioStreamPlayer = $fucktheclubup
 @export var audio_list: Array[AudioStream]
@@ -47,13 +56,13 @@ func _ready() -> void:
 		func(): client.close()
 	)
 	
-	button_send_message.pressed.connect(
-		func():
+	msg_line_edit.text_submitted.connect(
+		func(new_text: String):
 			if msg_line_edit.text.is_empty(): return
 			if client:
 				var data: Dictionary = {}
 				data[\"type\"] = \"chat_message\"
-				data[\"text\"] = msg_line_edit.text
+				data[\"text\"] = new_text
 				var bytes: PackedByteArray = var_to_bytes(data)
 				client.send(bytes, true)
 	)
@@ -63,10 +72,9 @@ func _on_msg_received(data: PackedByteArray):
 	var received_packed_type: String = received_data[\"type\"]
 	
 	if received_packed_type == \"chat_message\":
-		label_2.text += received_data[\"text\"] + \"\\n\"
+		global_chat_label.text += received_data[\"text\"] + \"\\n\"
 	
 	elif received_packed_type == \"voice\":
-		# Обработка голосового пакета (уже оптимизирована в MeatNetVoiceListener)
 		meat_net_voice_listener.msg_process(received_data)
 	
 	elif received_packed_type == \"fucktheclubup\":
@@ -77,27 +85,133 @@ func _on_msg_received(data: PackedByteArray):
 			return
 		fucktheclubup.stream = audio_list[audio_id]
 		fucktheclubup.play()
-		label_2.text += \"fucktheclubup xD\\n\"
+		global_chat_label.text += \"fucktheclubup xD\\n\"
+	
+	elif received_packed_type == \"client_joined_voice_room\" \\
+		or received_packed_type == \"client_left_voice_room\" \\
+		or received_packed_type == \"rooms\":
+		rooms.call(\"on_msg_received\", received_data)
+	
 
 func _process(delta: float) -> void:
 	meat_net_voice.update(client, delta)
 	client.update()
 	
-	label.text = \"\"\" Client\\n
-	is_active: %s\\n
-	connection_id: %s\\n
-	\"\"\" % [
-		client.is_active(),
-		client.get_connection_id()
-	]
+"
+
+[sub_resource type="GDScript" id="GDScript_xfnw7"]
+script/source = "extends TextureButton
+@onready var settings: Panel = $\"../Popups/Settings\"
+
+func _pressed() -> void:
+	settings.visible = !settings.visible
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j11hd"]
 bg_color = Color(0.015686275, 0.015686275, 0.015686275, 0.43529412)
 
+[sub_resource type="GDScript" id="GDScript_i7ck6"]
+script/source = "extends ScrollContainer
+
+@onready var v_box_container: VBoxContainer = $VBoxContainer
+
+var client: MeatNetClient
+var rooms: Dictionary = {}
+
+func _ready() -> void:
+	pass
+
+func on_msg_received(data: Dictionary) -> void:
+	var type: String = data[\"type\"]
+	
+	if type == \"client_joined_voice_room\":
+		pass
+	elif type == \"client_left_voice_room\":
+		pass
+	elif type == \"rooms\":
+		rooms = bytes_to_var(data[\"bytes\"])
+"
+
+[sub_resource type="GDScript" id="GDScript_g4v7s"]
+script/source = "extends HBoxContainer
+
+@onready var label: Label = $Label
+@onready var option_button: OptionButton = $OptionButton
+
+func _ready() -> void:
+	set_process(visible)
+	visibility_changed.connect(func(): set_process(visible))
+	
+	option_button.item_selected.connect(_on_item_selected)
+	_update()
+
+func _on_item_selected(idx: int) -> void:
+	if option_button.item_count < idx:
+		return
+	
+	AudioServer.input_device = option_button.get_item_text(idx)
+
+var _timer: float = 0.0
+var _update_interval: float = 2.0
+
+func _process(delta: float) -> void:
+	_timer += delta
+	if _timer >= _update_interval:
+		_update()
+
+
+func _update() -> void:
+	var selected_text = \"\"
+	if option_button.selected >= 0:
+		selected_text = option_button.get_item_text(option_button.selected)
+	
+	option_button.clear()
+	for device in AudioServer.get_input_device_list():
+		option_button.add_item(device)
+	
+	if selected_text != \"\":
+		var idx_to_select = -1
+		for i in range(option_button.item_count):
+			if option_button.get_item_text(i) == selected_text:
+				idx_to_select = i
+				break
+		if idx_to_select != -1:
+			option_button.select(idx_to_select)
+	
+"
+
+[sub_resource type="Theme" id="Theme_abs7h"]
+
+[sub_resource type="GDScript" id="GDScript_abs7h"]
+script/source = "extends HBoxContainer
+
+@onready var option_button: OptionButton = $OptionButton
+
+func _ready() -> void:
+	if option_button:
+		option_button.select(_get_activation_mode())
+		option_button.item_selected.connect(_on_item_selected)
+
+func _on_item_selected(idx: int) -> void:
+	_set_activation_mode(idx)
+
+func _get_activation_mode() -> int:
+	return ProjectSettings.get_setting(\"voice/activation_mode\", 0)
+
+func _set_activation_mode(val: int) -> void:
+	ProjectSettings.set_setting(\"voice/activation_mode\", val)
+"
+
+[sub_resource type="GDScript" id="GDScript_wi5wv"]
+script/source = "extends Button
+
+func _pressed() -> void:
+	get_parent().hide()
+"
+
 [node name="Client" type="Node" unique_id=1367465544]
 script = SubResource("GDScript_2k4rt")
-audio_list = Array[AudioStream]([ExtResource("1_d1ewr"), ExtResource("2_on60l"), ExtResource("3_1r7gt"), ExtResource("4_4r1j3"), ExtResource("5_k1uec"), ExtResource("6_uknch"), ExtResource("7_c40q3"), ExtResource("8_abs7h"), ExtResource("9_wi5wv"), ExtResource("10_i7ck6"), ExtResource("11_xfnw7"), ExtResource("12_2xqgu"), ExtResource("13_qqqx1")])
+audio_list = Array[AudioStream]([ExtResource("1_i7ck6"), ExtResource("2_xfnw7"), ExtResource("3_2xqgu"), ExtResource("4_qqqx1"), ExtResource("5_pe24h"), ExtResource("6_n1usf"), ExtResource("7_dlucc"), ExtResource("8_vgroh"), ExtResource("9_up72t"), ExtResource("10_s3cw1"), ExtResource("11_7g15q"), ExtResource("12_ogj38"), ExtResource("13_spk21")])
 
 [node name="Control" type="Control" parent="." unique_id=1089830285]
 layout_mode = 3
@@ -107,21 +221,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Control" unique_id=646700381]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=1355962155]
+[node name="BG_Texture" type="TextureRect" parent="Control" unique_id=1093260563]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 256.0
-offset_top = 256.0
-offset_right = -509.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("14_uknch")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=1355962155]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7638889
+anchor_top = 0.012345679
+anchor_right = 0.9887153
+anchor_bottom = 0.80709875
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="LineEdit" type="LineEdit" parent="Control/VBoxContainer" unique_id=2096975225]
 layout_mode = 2
@@ -129,34 +247,216 @@ text = "127.0.0.1:27020"
 placeholder_text = "Server Address"
 alignment = 1
 
-[node name="ButtonConnect" type="Button" parent="Control/VBoxContainer" unique_id=1430075051]
+[node name="ButtonConnect" type="TextureButton" parent="Control/VBoxContainer" unique_id=1226144869]
 layout_mode = 2
-text = "Connect"
+texture_normal = ExtResource("14_k1uec")
+texture_pressed = ExtResource("16_c40q3")
+stretch_mode = 5
 
-[node name="ButtonDisconnect" type="Button" parent="Control/VBoxContainer" unique_id=755352285]
-layout_mode = 2
-text = "Disconnect"
-
-[node name="ColorRect" type="ColorRect" parent="Control/VBoxContainer" unique_id=958004407]
-custom_minimum_size = Vector2(0, 5)
-layout_mode = 2
-color = Color(0.08468992, 0.08468992, 0.08468992, 1)
-
-[node name="MsgLineEdit" type="LineEdit" parent="Control/VBoxContainer" unique_id=896450476]
-layout_mode = 2
-placeholder_text = "Enter Message"
-alignment = 1
-
-[node name="ButtonSendMessage" type="Button" parent="Control/VBoxContainer" unique_id=1964811877]
-layout_mode = 2
-text = "Send Message"
-
-[node name="Label2" type="Label" parent="Control" unique_id=1162176777]
-layout_mode = 0
-anchor_left = 0.5859375
+[node name="Label" type="Label" parent="Control/VBoxContainer/ButtonConnect" unique_id=946371829]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = 14.0
+offset_right = -36.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "connect"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonDisconnect" type="TextureButton" parent="Control/VBoxContainer" unique_id=1405735282]
+layout_mode = 2
+texture_normal = ExtResource("14_k1uec")
+texture_pressed = ExtResource("16_c40q3")
+
+[node name="Label" type="Label" parent="Control/VBoxContainer/ButtonDisconnect" unique_id=1940096283]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 35.0
+offset_top = 14.0
+offset_right = -37.0
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "disconnect"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="Control" unique_id=1267980889]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 560.0
+offset_right = 88.0
+offset_bottom = 640.0
+texture_normal = ExtResource("14_4r1j3")
+ignore_texture_size = true
+stretch_mode = 5
+script = SubResource("GDScript_xfnw7")
+
+[node name="GlobalChat" type="ScrollContainer" parent="Control" unique_id=900874926]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.22222222
+anchor_top = 0.037037037
+anchor_right = 0.7222222
+anchor_bottom = 0.8518519
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Control/GlobalChat" unique_id=1162176777]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/normal = SubResource("StyleBoxFlat_j11hd")
+metadata/_edit_use_anchors_ = true
+
+[node name="Rooms" type="ScrollContainer" parent="Control" unique_id=1453807579]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.037037037
+anchor_right = 0.22222222
+anchor_bottom = 0.8518519
+script = SubResource("GDScript_i7ck6")
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Rooms" unique_id=979346636]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Control/Rooms/VBoxContainer" unique_id=1343653931]
+layout_mode = 2
+size_flags_vertical = 4
+text = "general"
+
+[node name="Label" type="Label" parent="Control" unique_id=986051675]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "rooms"
+
+[node name="Label2" type="Label" parent="Control" unique_id=778303332]
+layout_mode = 0
+offset_left = 256.0
+offset_right = 296.0
+offset_bottom = 23.0
+text = "global chat"
+
+[node name="Popups" type="Control" parent="Control" unique_id=528609569]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Settings" type="Panel" parent="Control/Popups" unique_id=815667299]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -288.0
+offset_top = -288.0
+offset_right = 288.0
+offset_bottom = 288.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/Popups/Settings" unique_id=1207326988]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Popups/Settings/ScrollContainer" unique_id=1813812797]
+layout_mode = 2
+
+[node name="Split" type="HBoxContainer" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer" unique_id=2118875171]
+layout_mode = 2
+
+[node name="Texture" type="TextureRect" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/Split" unique_id=333246766]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("17_abs7h")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/Split" unique_id=1109697599]
+layout_mode = 2
+text = "Audio Input"
+
+[node name="InputDevice" type="HBoxContainer" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer" unique_id=774239886]
+layout_mode = 2
+script = SubResource("GDScript_g4v7s")
+
+[node name="Label" type="Label" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/InputDevice" unique_id=2114499914]
+layout_mode = 2
+text = "Input device: "
+
+[node name="OptionButton" type="OptionButton" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/InputDevice" unique_id=1979987218]
+layout_mode = 2
+
+[node name="ActivationMode" type="HBoxContainer" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer" unique_id=1656717604]
+layout_mode = 2
+theme = SubResource("Theme_abs7h")
+script = SubResource("GDScript_abs7h")
+
+[node name="Label" type="Label" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/ActivationMode" unique_id=277125907]
+layout_mode = 2
+text = "Activation mode: "
+
+[node name="OptionButton" type="OptionButton" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/ActivationMode" unique_id=1470585102]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Voice"
+popup/item_0/id = 0
+popup/item_1/text = "PushToTalk"
+popup/item_1/id = 1
+
+[node name="ActivationBind" type="HBoxContainer" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer" unique_id=243905342]
+layout_mode = 2
+theme = SubResource("Theme_abs7h")
+script = ExtResource("19_wi5wv")
+
+[node name="Label" type="Label" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/ActivationBind" unique_id=887333230]
+layout_mode = 2
+text = "Activation Key: "
+
+[node name="Button" type="Button" parent="Control/Popups/Settings/ScrollContainer/VBoxContainer/ActivationBind" unique_id=1044500069]
+layout_mode = 2
+text = "<empty>"
+
+[node name="Button" type="Button" parent="Control/Popups/Settings" unique_id=2037929403]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.0017361111
+anchor_right = 1.0
+anchor_bottom = 0.0017361111
+offset_left = -27.0
+offset_bottom = 31.0
+text = " X "
+script = SubResource("GDScript_wi5wv")
+metadata/_edit_use_anchors_ = true
+
+[node name="MsgLineEdit" type="LineEdit" parent="Control" unique_id=896450476]
+layout_mode = 0
+anchor_left = 0.22222222
+anchor_top = 0.86419755
+anchor_right = 0.7222222
+anchor_bottom = 0.912037
+placeholder_text = "Enter Message"
+alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="fucktheclubup" type="AudioStreamPlayer" parent="." unique_id=1027724610]
@@ -168,3 +468,9 @@ metadata/_custom_type_script = "uid://cafj0dvsggmrd"
 [node name="MeatNetVoiceListener" type="Node" parent="." unique_id=1423608419]
 script = ExtResource("15_4r1j3")
 metadata/_custom_type_script = "uid://e4cefdi6enwq"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1292890879]
+stream = ExtResource("22_i7ck6")
+autoplay = true
+bus = &"Music"
+parameters/looping = true

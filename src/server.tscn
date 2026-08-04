@@ -13,6 +13,12 @@ var c_max: int = 4
 
 var nicknames: Dictionary = {}
 
+var voice_rooms: Dictionary = {
+	\"general\": {
+			\"members\": []
+			}
+}
+
 func _ready() -> void:
 	randomize()
 	server = MeatNetServer.new()
@@ -41,9 +47,9 @@ func _on_msg_received(conn_id: int, bytes: PackedByteArray):
 					nicknames[conn_id] = argv[0]
 					return
 				\"/fucktheclubup\":
-					return
+					#return
 					send_data[\"type\"] = \"fucktheclubup\"
-					send_data[\"audio_id\"] = randi_range(0, 13)
+					send_data[\"audio_id\"] = randi_range(0, 12)
 					server.send(var_to_bytes(send_data), true)
 					return
 			return
@@ -53,14 +59,30 @@ func _on_msg_received(conn_id: int, bytes: PackedByteArray):
 		send_data[\"text\"] = full_msg
 		server.send(var_to_bytes(send_data), true)
 	
+	elif received_packet_type == \"request_join_room\":
+		pass
+	
 	elif received_packet_type == \"voice\":
-		# Релейная передача голоса всем, кроме отправителя
-		server.broadcast(bytes, conn_id, true)
+		server.send(bytes, true)
 
 func get_nickname(id: int) -> String:
 	if nicknames.has(id):
 		return nicknames[id]
 	return str(id)
+
+func _client_join_voice_room(client_id: int, room_name: String) -> void:
+	var send_data: Dictionary = {}
+	for room in voice_rooms.keys():
+		if room[\"members\"].has(client_id):
+			room[\"members\"].erase(client_id)
+			send_data[\"type\"] = \"client_left_voice_room\"
+			send_data[\"room_id\"] = room
+			server.send(var_to_bytes(send_data), true)
+	
+	voice_rooms[room_name][\"members\"].append(client_id)
+	send_data[\"type\"] = \"client_joined_voice_room\"
+	send_data[\"room_id\"] = room_name
+	server.send(var_to_bytes(send_data), true)
 
 func _process(delta: float) -> void:
 	if !server:

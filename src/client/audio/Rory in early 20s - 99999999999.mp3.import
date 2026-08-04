@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cn667q4at5wrx"
+path="res://.godot/imported/Rory in early 20s - 99999999999.mp3-a93c485514f65354ef1643a5204399c7.mp3str"
+
+[deps]
+
+source_file="res://src/client/audio/Rory in early 20s - 99999999999.mp3"
+dest_files=["res://.godot/imported/Rory in early 20s - 99999999999.mp3-a93c485514f65354ef1643a5204399c7.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
